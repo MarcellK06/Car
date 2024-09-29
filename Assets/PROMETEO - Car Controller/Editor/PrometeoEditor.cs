@@ -25,6 +25,7 @@ public class PrometeoEditor : Editor{
   private SerializedProperty decelerationMultiplier;
   private SerializedProperty handbrakeDriftMultiplier;
   private SerializedProperty bodyMassCenter;
+  private SerializedProperty playerCam;
   //
   //
   //WHEELS VARIABLES
@@ -88,6 +89,7 @@ public class PrometeoEditor : Editor{
     decelerationMultiplier = SO.FindProperty("decelerationMultiplier");
     handbrakeDriftMultiplier = SO.FindProperty("handbrakeDriftMultiplier");
     bodyMassCenter = SO.FindProperty("bodyMassCenter");
+    playerCam = SO.FindProperty("playerCam");
 
     frontLeftMesh = SO.FindProperty("frontLeftMesh");
     frontLeftCollider = SO.FindProperty("frontLeftCollider");
@@ -142,6 +144,7 @@ public class PrometeoEditor : Editor{
     decelerationMultiplier.intValue = EditorGUILayout.IntSlider("Deceleration Multiplier:", decelerationMultiplier.intValue, 1, 10);
     handbrakeDriftMultiplier.intValue = EditorGUILayout.IntSlider("Drift Multiplier:", handbrakeDriftMultiplier.intValue, 1, 10);
     EditorGUILayout.PropertyField(bodyMassCenter, new GUIContent("Mass Center of Car: "));
+    EditorGUILayout.PropertyField(playerCam, new GUIContent("Player Camera: "));
 
     //
     //
@@ -218,27 +221,6 @@ public class PrometeoEditor : Editor{
 
         EditorGUILayout.PropertyField(carEngineSound, new GUIContent("Car Engine Sound: "));
         EditorGUILayout.PropertyField(tireScreechSound, new GUIContent("Tire Screech Sound: "));
-
-    EditorGUILayout.EndToggleGroup();
-
-    //
-    //
-    //TOUCH CONTROLS
-    //
-    //
-
-    GUILayout.Space(25);
-    GUILayout.Label("TOUCH CONTROLS", EditorStyles.boldLabel);
-    GUILayout.Space(10);
-
-    useTouchControls.boolValue = EditorGUILayout.BeginToggleGroup("Use touch controls (mobile devices)?", useTouchControls.boolValue);
-    GUILayout.Space(10);
-
-        EditorGUILayout.PropertyField(throttleButton, new GUIContent("Throttle Button: "));
-        EditorGUILayout.PropertyField(reverseButton, new GUIContent("Brakes/Reverse Button: "));
-        EditorGUILayout.PropertyField(turnLeftButton, new GUIContent("Turn Left Button: "));
-        EditorGUILayout.PropertyField(turnRightButton, new GUIContent("Turn Right Button: "));
-        EditorGUILayout.PropertyField(handbrakeButton, new GUIContent("Handbrake Button: "));
 
     EditorGUILayout.EndToggleGroup();
 

@@ -45,6 +45,7 @@ public class PrometeoCarController : MonoBehaviour
                                     // in the points x = 0 and z = 0 of your car. You can select the value that you want in the y axis,
                                     // however, you must notice that the higher this value is, the more unstable the car becomes.
                                     // Usually the y value goes from 0 to 1.5.
+      public Transform playerCam;
 
     //WHEELS
 
@@ -110,17 +111,11 @@ public class PrometeoCarController : MonoBehaviour
       //[Header("CONTROLS")]
       [Space(10)]
       //The following variables lets you to set up touch controls for mobile devices.
-      public bool useTouchControls = false;
       public GameObject throttleButton;
-      PrometeoTouchInput throttlePTI;
       public GameObject reverseButton;
-      PrometeoTouchInput reversePTI;
       public GameObject turnRightButton;
-      PrometeoTouchInput turnRightPTI;
       public GameObject turnLeftButton;
-      PrometeoTouchInput turnLeftPTI;
       public GameObject handbrakeButton;
-      PrometeoTouchInput handbrakePTI;
 
     //CAR DATA
 
@@ -143,7 +138,6 @@ public class PrometeoCarController : MonoBehaviour
       float localVelocityZ;
       float localVelocityX;
       bool deceleratingCar;
-      bool touchControlsSetup = false;
       /*
       The following variables are used to store information about sideways friction of the wheels (such as
       extremumSlip,extremumValue, asymptoteSlip, asymptoteValue and stiffness). We change this values to
@@ -240,26 +234,6 @@ public class PrometeoCarController : MonoBehaviour
             RRWTireSkid.emitting = false;
           }
         }
-
-        if(useTouchControls){
-          if(throttleButton != null && reverseButton != null &&
-          turnRightButton != null && turnLeftButton != null
-          && handbrakeButton != null){
-
-            throttlePTI = throttleButton.GetComponent<PrometeoTouchInput>();
-            reversePTI = reverseButton.GetComponent<PrometeoTouchInput>();
-            turnLeftPTI = turnLeftButton.GetComponent<PrometeoTouchInput>();
-            turnRightPTI = turnRightButton.GetComponent<PrometeoTouchInput>();
-            handbrakePTI = handbrakeButton.GetComponent<PrometeoTouchInput>();
-            touchControlsSetup = true;
-
-          }else{
-            String ex = "Touch controls are not completely set up. You must drag and drop your scene buttons in the" +
-            " PrometeoCarController component.";
-            Debug.LogWarning(ex);
-          }
-        }
-
     }
 
     // Update is called once per frame
@@ -287,46 +261,7 @@ public class PrometeoCarController : MonoBehaviour
       In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
       A (turn left), D (turn right) or Space bar (handbrake).
       */
-      if (useTouchControls && touchControlsSetup){
-
-        if(throttlePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoForward();
-        }
-        if(reversePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoReverse();
-        }
-
-        if(turnLeftPTI.buttonPressed){
-          TurnLeft();
-        }
-        if(turnRightPTI.buttonPressed){
-          TurnRight();
-        }
-        if(handbrakePTI.buttonPressed){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          Handbrake();
-        }
-        if(!handbrakePTI.buttonPressed){
-          RecoverTraction();
-        }
-        if((!throttlePTI.buttonPressed && !reversePTI.buttonPressed)){
-          ThrottleOff();
-        }
-        if((!reversePTI.buttonPressed && !throttlePTI.buttonPressed) && !handbrakePTI.buttonPressed && !deceleratingCar){
-          InvokeRepeating("DecelerateCar", 0f, 0.1f);
-          deceleratingCar = true;
-        }
-        if(!turnLeftPTI.buttonPressed && !turnRightPTI.buttonPressed && steeringAxis != 0f){
-          ResetSteeringAngle();
-        }
-
-      }else{
-
+      
         if(Input.GetKey(KeyCode.W)){
           CancelInvoke("DecelerateCar");
           deceleratingCar = false;
@@ -361,9 +296,11 @@ public class PrometeoCarController : MonoBehaviour
         }
         if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f){
           ResetSteeringAngle();
+          ResetCamera();
         }
-
-      }
+        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && playerCam.localPosition.x != 0){
+          ResetCamera();
+        }
 
 
       // We call the method AnimateWheelMeshes() in order to match the wheel collider movements with the 3D meshes of the wheels.
@@ -431,6 +368,7 @@ public class PrometeoCarController : MonoBehaviour
       var steeringAngle = steeringAxis * maxSteeringAngle;
       frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
       frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(-0.75f, playerCam.transform.localPosition.y, playerCam.transform.localPosition.z), Time.deltaTime*0.75f);
     }
 
     //The following method turns the front car wheels to the right. The speed of this movement will depend on the steeringSpeed variable.
@@ -442,6 +380,7 @@ public class PrometeoCarController : MonoBehaviour
       var steeringAngle = steeringAxis * maxSteeringAngle;
       frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
       frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(0.75f, playerCam.transform.localPosition.y, playerCam.transform.localPosition.z), Time.deltaTime*0.75f);
     }
 
     //The following method takes the front car wheels to their default position (rotation = 0). The speed of this movement will depend
@@ -458,6 +397,11 @@ public class PrometeoCarController : MonoBehaviour
       var steeringAngle = steeringAxis * maxSteeringAngle;
       frontLeftCollider.steerAngle = Mathf.Lerp(frontLeftCollider.steerAngle, steeringAngle, steeringSpeed);
       frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
+      
+    }
+
+    public void ResetCamera() {
+      playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(0, playerCam.transform.localPosition.y, playerCam.transform.localPosition.z), Time.deltaTime*7.5f);
     }
 
     // This method matches both the position and rotation of the WheelColliders with the WheelMeshes.
@@ -527,10 +471,13 @@ public class PrometeoCarController : MonoBehaviour
           rearLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
           rearRightCollider.brakeTorque = 0;
           rearRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+(0.75f/10), -5.93f-0.75f), Time.deltaTime*0.75f);
+    
         }else {
           // If the maxSpeed has been reached, then stop applying torque to the wheels.
           // IMPORTANT: The maxSpeed variable should be considered as an approximation; the speed of the car
           // could be a bit higher than expected.
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f, -5.93f), Time.deltaTime*0.75f);
     			frontLeftCollider.motorTorque = 0;
     			frontRightCollider.motorTorque = 0;
           rearLeftCollider.motorTorque = 0;
@@ -571,6 +518,7 @@ public class PrometeoCarController : MonoBehaviour
           rearLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
           rearRightCollider.brakeTorque = 0;
           rearRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+(0.75f/10), -5.93f+0.75f), Time.deltaTime*0.75f);
         }else {
           //If the maxReverseSpeed has been reached, then stop applying torque to the wheels.
           // IMPORTANT: The maxReverseSpeed variable should be considered as an approximation; the speed of the car
@@ -579,6 +527,8 @@ public class PrometeoCarController : MonoBehaviour
     			frontRightCollider.motorTorque = 0;
           rearLeftCollider.motorTorque = 0;
     			rearRightCollider.motorTorque = 0;
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f, -5.93f), Time.deltaTime*0.75f);
+        
     		}
       }
     }
@@ -633,6 +583,8 @@ public class PrometeoCarController : MonoBehaviour
       frontRightCollider.brakeTorque = brakeForce;
       rearLeftCollider.brakeTorque = brakeForce;
       rearRightCollider.brakeTorque = brakeForce;
+        playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+((0.75f/10)*2), -5.93f+(0.75f*2)), Time.deltaTime*0.75f);
+        
     }
 
     // This function is used to make the car lose traction. By using this, the car will start drifting. The amount of traction lost

@@ -31,7 +31,7 @@ public class NewBehaviourScript : MonoBehaviour
     {
        
 
-        if (Input.GetKeyDown(KeyCode.F) && CanDrive)
+        if (Input.GetKeyDown(KeyCode.F) && CanDrive && !driving)
         {
             
             CarController.enabled=true;
@@ -43,7 +43,7 @@ public class NewBehaviourScript : MonoBehaviour
             PlayerCam.gameObject.SetActive(false);
             CarCam.gameObject.SetActive(true);
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.F) && driving && !CanDrive)
         {
             driving=false;
             CarController.enabled=false;
