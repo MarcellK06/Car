@@ -349,8 +349,8 @@ MonoBehaviour:
   planePrefab: {fileID: 2682196346162769525, guid: 5b3b98283963c094cabde680471da5ac, type: 3}
   minPlanes: 3
   maxPlanes: 15
-  numberOfSections: 10
-  distanceBetweenPlanes: 8
+  numberOfSections: 100
+  distanceBetweenPlanes: 16
   minCurvature: -30
   maxCurvature: 30
   minElevation: -10
@@ -2035,7 +2035,16 @@ MonoBehaviour:
   - 1
   - 0.84
   - 0.57
-  - 3.28
+  - -3.28
+  maxSpeeds:
+  - 53
+  - 80
+  - 110
+  - 143
+  - 190
+  - 286
+  - 53
+  currentGear: 0
 --- !u!4 &2080982710 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2806714669947893885, guid: 8a8f57edf3523624eb9f886833e8e97a, type: 3}
