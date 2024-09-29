@@ -35,7 +35,7 @@ public class PrometeoCarController : MonoBehaviour
       public float steeringSpeed = 0.5f; // How fast the steering wheel turns.
       [Space(10)]
       [Range(100, 600)]
-      public int brakeForce = 350; // The strength of the wheel brakes.
+      public int brakeForce = 900; // The strength of the wheel brakes.
       [Range(1, 10)]
       public int decelerationMultiplier = 2; // How fast the car decelerates when the user is not using the throttle.
       [Range(1, 10)]
@@ -125,7 +125,9 @@ public class PrometeoCarController : MonoBehaviour
       public bool isDrifting; // Used to know whether the car is drifting or not.
       [HideInInspector]
       public bool isTractionLocked; // Used to know whether the traction of the car is locked or not.
-
+      public float[] gearRatios;
+      public float[] maxSpeeds;
+      public int currentGear = 0;
     //PRIVATE VARIABLES
 
       /*
@@ -268,11 +270,15 @@ public class PrometeoCarController : MonoBehaviour
           GoForward();
         }
         if(Input.GetKey(KeyCode.S)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoReverse();
+          Brakes();
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+          currentGear = currentGear == gearRatios.Length-1 ? gearRatios.Length-1 : currentGear+1;
+        if (Input.GetKeyDown(KeyCode.Q))
+          currentGear = currentGear == 0 ? 0 : currentGear-1;
+
+          Debug.Log(frontLeftCollider.rpm);
         if(Input.GetKey(KeyCode.A)){
           TurnLeft();
         }
@@ -331,7 +337,7 @@ public class PrometeoCarController : MonoBehaviour
       if(useSounds){
         try{
           if(carEngineSound != null){
-            float engineSoundPitch = initialCarEngineSoundPitch + (Mathf.Abs(carRigidbody.velocity.magnitude) / 25f);
+            float engineSoundPitch = initialCarEngineSoundPitch + frontLeftCollider.rpm/1000/(gearRatios[0]/gearRatios[currentGear]);
             carEngineSound.pitch = engineSoundPitch;
           }
           if((isDrifting) || (isTractionLocked && Mathf.Abs(carSpeed) > 12f)){
@@ -458,81 +464,29 @@ public class PrometeoCarController : MonoBehaviour
       //If the car is going backwards, then apply brakes in order to avoid strange
       //behaviours. If the local velocity in the 'z' axis is less than -1f, then it
       //is safe to apply positive torque to go forward.
-      if(localVelocityZ < -1f){
-        Brakes();
-      }else{
-        if(Mathf.RoundToInt(carSpeed) < maxSpeed){
+        if(Mathf.RoundToInt(carSpeed) < maxSpeeds[currentGear]){
           //Apply positive torque in all wheels to go forward if maxSpeed has not been reached.
           frontLeftCollider.brakeTorque = 0;
-          frontLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
+          frontLeftCollider.motorTorque = accelerationMultiplier * 50f * throttleAxis * gearRatios[currentGear];
           frontRightCollider.brakeTorque = 0;
-          frontRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
+          frontRightCollider.motorTorque = accelerationMultiplier * 50f * throttleAxis * gearRatios[currentGear];
           rearLeftCollider.brakeTorque = 0;
-          rearLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
+          rearLeftCollider.motorTorque = accelerationMultiplier * 50f * throttleAxis * gearRatios[currentGear];
           rearRightCollider.brakeTorque = 0;
-          rearRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
-          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+(0.75f/10), -5.93f-0.75f), Time.deltaTime*0.75f);
+          rearRightCollider.motorTorque = accelerationMultiplier * 50f * throttleAxis * gearRatios[currentGear];
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+(0.75f/10), -5.93f-0.75f), Time.deltaTime*0.75f * gearRatios[currentGear]);
     
         }else {
           // If the maxSpeed has been reached, then stop applying torque to the wheels.
           // IMPORTANT: The maxSpeed variable should be considered as an approximation; the speed of the car
           // could be a bit higher than expected.
-          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f, -5.93f), Time.deltaTime*0.75f);
+          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f, -5.93f), Time.deltaTime*0.75f * gearRatios[currentGear]);
     			frontLeftCollider.motorTorque = 0;
     			frontRightCollider.motorTorque = 0;
           rearLeftCollider.motorTorque = 0;
     			rearRightCollider.motorTorque = 0;
     		}
-      }
     }
-
-    // This method apply negative torque to the wheels in order to go backwards.
-    public void GoReverse(){
-      //If the forces aplied to the rigidbody in the 'x' asis are greater than
-      //3f, it means that the car is losing traction, then the car will start emitting particle systems.
-      if(Mathf.Abs(localVelocityX) > 2.5f){
-        isDrifting = true;
-        DriftCarPS();
-      }else{
-        isDrifting = false;
-        DriftCarPS();
-      }
-      // The following part sets the throttle power to -1 smoothly.
-      throttleAxis = throttleAxis - (Time.deltaTime * 3f);
-      if(throttleAxis < -1f){
-        throttleAxis = -1f;
-      }
-      //If the car is still going forward, then apply brakes in order to avoid strange
-      //behaviours. If the local velocity in the 'z' axis is greater than 1f, then it
-      //is safe to apply negative torque to go reverse.
-      if(localVelocityZ > 1f){
-        Brakes();
-      }else{
-        if(Mathf.Abs(Mathf.RoundToInt(carSpeed)) < maxReverseSpeed){
-          //Apply negative torque in all wheels to go in reverse if maxReverseSpeed has not been reached.
-          frontLeftCollider.brakeTorque = 0;
-          frontLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
-          frontRightCollider.brakeTorque = 0;
-          frontRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
-          rearLeftCollider.brakeTorque = 0;
-          rearLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
-          rearRightCollider.brakeTorque = 0;
-          rearRightCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
-          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f+(0.75f/10), -5.93f+0.75f), Time.deltaTime*0.75f);
-        }else {
-          //If the maxReverseSpeed has been reached, then stop applying torque to the wheels.
-          // IMPORTANT: The maxReverseSpeed variable should be considered as an approximation; the speed of the car
-          // could be a bit higher than expected.
-    			frontLeftCollider.motorTorque = 0;
-    			frontRightCollider.motorTorque = 0;
-          rearLeftCollider.motorTorque = 0;
-    			rearRightCollider.motorTorque = 0;
-          playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, new Vector3(playerCam.transform.localPosition.x, 2.16f, -5.93f), Time.deltaTime*0.75f);
-        
-    		}
-      }
-    }
-
     //The following function set the motor torque to 0 (in case the user is not pressing either W or S).
     public void ThrottleOff(){
       frontLeftCollider.motorTorque = 0;

@@ -75,6 +75,8 @@ public class PrometeoEditor : Editor{
   private SerializedProperty turnRightButton;
   private SerializedProperty turnLeftButton;
   private SerializedProperty handbrakeButton;
+  private SerializedProperty gearRatios;
+  private SerializedProperty maxSpeeds;
 
   private void OnEnable(){
     prometeo = (PrometeoCarController)target;
@@ -119,6 +121,9 @@ public class PrometeoEditor : Editor{
     turnRightButton = SO.FindProperty("turnRightButton");
     turnLeftButton = SO.FindProperty("turnLeftButton");
     handbrakeButton = SO.FindProperty("handbrakeButton");
+
+    gearRatios = SO.FindProperty("gearRatios");
+    maxSpeeds = SO.FindProperty("maxSpeeds");
 
   }
 
@@ -167,6 +172,8 @@ public class PrometeoEditor : Editor{
 
     EditorGUILayout.PropertyField(rearRightMesh, new GUIContent("Rear Right Mesh: "));
     EditorGUILayout.PropertyField(rearRightCollider, new GUIContent("Rear Right Collider: "));
+    EditorGUILayout.PropertyField(gearRatios, new GUIContent("Gear Ratios: "));
+    EditorGUILayout.PropertyField(maxSpeeds, new GUIContent("Max Speeds: "));
 
     //
     //
