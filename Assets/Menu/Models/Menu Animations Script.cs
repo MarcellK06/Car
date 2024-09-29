@@ -13,14 +13,18 @@ public class MenuAnimationsScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach(var light in streetLights)
-            light.intensity = 0;
-        foreach(var light in headLights_)
-            light.intensity = 0;
-        foreach(var light in highBeams)
-            light.intensity = 0;
-        foreach(var eyes in angelEyes)
+        foreach(var light in streetLights) {
+            light.enabled = false;
+        }
+        foreach(var light in headLights_) {
+            light.enabled = false;
+        }
+        foreach(var light in highBeams) {
+            light.enabled = false;
+        }
+        foreach(var eyes in angelEyes) {
             eyes.SetActive(false);
+        }
 
             StartCoroutine(lightAnimation());
     }
@@ -29,10 +33,15 @@ public class MenuAnimationsScript : MonoBehaviour
     void FixedUpdate()
     {
         if (turnOnLights) {
+        foreach(var light in highBeams)
+            light.enabled = false;
         foreach(var light in streetLights)
-            light.intensity = Mathf.Lerp(light.intensity, 1, Time.deltaTime);
+            light.enabled = true;
         foreach(var light in headLights_)
-            light.intensity = Mathf.Lerp(light.intensity, 2, Time.deltaTime);
+            light.enabled = true;
+        foreach(var eye in angelEyes)
+            if(eye.GetComponent<Light>())
+                eye.GetComponent<Light>().enabled = false;
         }
     }
 
@@ -51,12 +60,13 @@ public class MenuAnimationsScript : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
             for(var k = 0; k < 2; k++) {
         yield return new WaitForSeconds(0.1f);
-        foreach(var lights in highBeams)
-            lights.intensity = 3;
+        foreach(var light in highBeams)
+            light.enabled = true;
         yield return new WaitForSeconds(0.1f);
-        foreach(var lights in highBeams)
-            lights.intensity =  0;
+        foreach(var light in highBeams)
+            light.enabled = false;
             }
+            yield return new WaitForSeconds(0.5f);
         turnOnLights = true;
         yield return new WaitForSeconds(5f);
         easteregg.Play();
