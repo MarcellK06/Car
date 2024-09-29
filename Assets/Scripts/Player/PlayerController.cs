@@ -41,8 +41,8 @@ public class PlayerController : MonoBehaviour
         float w_s = Input.GetAxisRaw("Vertical");
         float a_d = Input.GetAxisRaw("Horizontal");
 
-        float x = Input.GetAxis("Mouse X");
-        float y = Input.GetAxis("Mouse Y");
+        float x = Input.GetAxisRaw("Mouse X");
+        float y = Input.GetAxisRaw("Mouse Y");
 
         if (!controller.isGrounded)
         {
@@ -63,16 +63,19 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("Jumping", Input.GetButton("Jump"));
         animator.SetBool("Grounded", controller.isGrounded);
         #endregion
+
         controller.Move(transform.forward * w_s * speed * Time.deltaTime + transform.right * a_d * speed * Time.deltaTime + transform.up * verticalVelocity * Time.deltaTime);
-        transform.Rotate(transform.up * x * sensitivity * Time.deltaTime);
-        head.Rotate(transform.right * y * sensitivity * Time.deltaTime);
-        Vector3 headRot = head.rotation.eulerAngles;
+        head.Rotate(transform.right * y * sensitivity * Time.deltaTime + transform.up * x * sensitivity * Time.deltaTime);
+        Debug.Log(transform.right);
+        Vector3 headRot = head.localEulerAngles;
         if (headRot.x > 180f) headRot.x -= 360f;
 
         headRot.x = Mathf.Clamp(headRot.x, -90f, 90f);
-        headRot.y = Mathf.Clamp(headRot.y, 0f, 0f);
         headRot.z = Mathf.Clamp(headRot.z, 0f, 0f);
-        head.localEulerAngles = new Vector3(headRot.x, 0f, 0f);
-
+        if (w_s != 0 || a_d != 0) {
+            transform.Rotate(new Vector3(0f, headRot.y, 0f));
+            headRot.y = 0;
+        }
+        head.localEulerAngles = new Vector3(headRot.x, headRot.y, 0f);
     }
 }
