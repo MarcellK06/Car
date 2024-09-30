@@ -27,7 +27,7 @@ public class Generation : MonoBehaviour
     {
         Vector3 currentPosition = Vector3.zero;
         Quaternion currentRotation = Quaternion.identity;
-
+        var lv = GetComponent<positionMarker>();
         // Loop through the number of sections
         for (var k = 0; k < numberOfSections; k++)
         {
@@ -35,22 +35,23 @@ public class Generation : MonoBehaviour
             int numberOfPlanes = Random.Range(minPlanes, maxPlanes);
             for (int i = 0; i < numberOfPlanes; i++)
             {
+                currentRotation.z = 0f;
                 var v = Instantiate(planePrefab, currentPosition, currentRotation);
-                var vV3 = v.getComponent<positionMarker>();
+                var vV3 = v.transform.GetComponent<positionMarker>();
                 if (Random.Range(1, 10) == 3) {
                     int elevation = Random.Range(minElevation, maxElevation);
-                    v1 = vV3.start;
-                    v2 = Vector3.zero;
-                    if (lv)
+                    var v1 = vV3.start;
+                    var v2 = Vector3.zero;
+                    if (lv.end != Vector3.zero)
                         v2 = lv.end;
-                    currentPosition += currentRotation * (Vector3.forward * distanceBetweenPlanes + Vector3.up * (v1.y - v2.y));
+                    currentPosition += currentRotation * (Vector3.forward * distanceBetweenPlanes + Vector3.up * (v1.x - v2.x));
                 currentRotation *= Quaternion.Euler(elevation, curvature / numberOfPlanes, 0);
                 }
                 else {
                     currentPosition += currentRotation * Vector3.forward * distanceBetweenPlanes;
                 currentRotation *= Quaternion.Euler(0, curvature / numberOfPlanes, 0);
                 }
-                var lv = vV3;
+                lv = vV3;
             }
         }
     }
