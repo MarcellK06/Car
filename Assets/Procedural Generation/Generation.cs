@@ -40,8 +40,9 @@ public class Generation : MonoBehaviour
                 if (Random.Range(1, 10) == 3) {
                     int elevation = Random.Range(minElevation, maxElevation);
                     v1 = vV3.start;
+                    v2 = Vector3.zero;
                     if (lv)
-                        var v2 = lv.end;
+                        v2 = lv.end;
                     currentPosition += currentRotation * (Vector3.forward * distanceBetweenPlanes + Vector3.up * (v1.y - v2.y));
                 currentRotation *= Quaternion.Euler(elevation, curvature / numberOfPlanes, 0);
                 }
