@@ -1,0 +1,11 @@
+Model Information:
+* title:	BMW M3 E46
+* source:	https://sketchfab.com/3d-models/bmw-m3-e46-325f74ef4f44457fad28f66fcbb7b32f
+* author:	Fratzica (https://sketchfab.com/vasilebetivu62)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "BMW M3 E46" (https://sketchfab.com/3d-models/bmw-m3-e46-325f74ef4f44457fad28f66fcbb7b32f) by Fratzica (https://sketchfab.com/vasilebetivu62) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
