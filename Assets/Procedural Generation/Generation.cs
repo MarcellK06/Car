@@ -35,16 +35,21 @@ public class Generation : MonoBehaviour
             int numberOfPlanes = Random.Range(minPlanes, maxPlanes);
             for (int i = 0; i < numberOfPlanes; i++)
             {
-                Instantiate(planePrefab, currentPosition, currentRotation);
+                var v = Instantiate(planePrefab, currentPosition, currentRotation);
+                var vV3 = v.getComponent<positionMarker>();
                 if (Random.Range(1, 10) == 3) {
-                    int elevation = 0;
-                    currentPosition += currentRotation * (Vector3.forward * distanceBetweenPlanes);
+                    int elevation = Random.Range(minElevation, maxElevation);
+                    v1 = vV3.start;
+                    if (lv)
+                        var v2 = lv.end;
+                    currentPosition += currentRotation * (Vector3.forward * distanceBetweenPlanes + Vector3.up * (v1.y - v2.y));
                 currentRotation *= Quaternion.Euler(elevation, curvature / numberOfPlanes, 0);
                 }
                 else {
                     currentPosition += currentRotation * Vector3.forward * distanceBetweenPlanes;
                 currentRotation *= Quaternion.Euler(0, curvature / numberOfPlanes, 0);
                 }
+                var lv = vV3;
             }
         }
     }
