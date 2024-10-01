@@ -30,10 +30,6 @@ public class NewBehaviourScript : MonoBehaviour
     void Update()
     {
 
-       if (driving && playerCam.position != carCam.position)
-           playerCam.position = Mathf.lerp(playerCam.position, carCam.position, Time.deltaTime*2);
-        if(!driving && playerCam.position.z != -4)
-            playerCam.position = Mathf.lerp(playerCam.position, new Vector3(0, 3, -4), Time.deltaTime*2);
 
         if (Input.GetKeyDown(KeyCode.F) && CanDrive && !driving)
         {
