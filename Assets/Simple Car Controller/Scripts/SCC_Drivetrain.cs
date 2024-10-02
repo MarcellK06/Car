@@ -112,6 +112,7 @@ public class SCC_Drivetrain : MonoBehaviour {
 
         maximumSpeed = maximumSpeedPerGear[currentGear];
 
+        turboState = currentEngineRPM > 3000 ? currentEngineRPM / maximumEngineRPM * turboExtra : 0;
         //  Getting average rpm of the traction wheels for calculating the engine rpm.
         float averageTractionRPM = 0f;
         int totalTractionWheels = 0;
@@ -260,7 +261,6 @@ public class SCC_Drivetrain : MonoBehaviour {
 
         Rigid.centerOfMass = COM.localPosition;     //  Setting center of mass of the rigidbody.
         speed = Rigid.velocity.magnitude * 3.6f;        //  Speed of the vehicle.
-        turboState = currentEngineRPM / maximumEngineRPM * turboExtra;
 
         //  If speed is below 5, and player is still pressing brake, increase timerForReverse value. If this value exceeds the limit, set direction to -1 for reverse gear.
         if (speed <= 5f && InputProcessor.inputs.brakeInput >= .75f)
