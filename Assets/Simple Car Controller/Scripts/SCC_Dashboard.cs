@@ -21,9 +21,20 @@ public class SCC_Dashboard : MonoBehaviour {
     private float rpm = 0f;
     private float kmh = 0f;
 
+   
+
+
+    public UnityEngine.UI.Text currentGear;
+    void Update() {
+        
+          
+    }
+
     //  Needles.
     public RectTransform RPMNeedle;
     public RectTransform KMHNeedle;
+
+    
 
     //  Multipliers of the needles for adjusting min and max rotations.
     public float RPMNeedleMultiplier = 1.2f;
@@ -53,6 +64,7 @@ public class SCC_Dashboard : MonoBehaviour {
 
             rpm = car.currentEngineRPM * RPMNeedleMultiplier;
             kmh = car.speed * KMHNeedleMultiplier;
+            currentGear.text =(car.currentGear + 1).ToString();
 
         }
 

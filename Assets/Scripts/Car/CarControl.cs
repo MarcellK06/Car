@@ -15,6 +15,7 @@ public class CarControl : MonoBehaviour
   public Vector3 windowDown;
   
 
+
   public void Start() {
     for(var k = 0; k < AngelEyes.Length; k++)
       AngelEyes[k].enabled = false;
@@ -23,6 +24,8 @@ public class CarControl : MonoBehaviour
     for(var k = 0; k < highBeams.Length; k++)
       highBeams[k].enabled = false;
   }
+
+
 
   public void Update() {
     if (Input.GetButtonDown("DRL"))
@@ -49,6 +52,7 @@ public class CarControl : MonoBehaviour
         brakeLights[k].enabled = !brakeLights[k].enabled;
 
   }
+
 
   IEnumerator Flash() {
       for(var k = 0; k < highBeams.Length; k++)
