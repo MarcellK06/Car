@@ -17,7 +17,7 @@ public class CarControl : MonoBehaviour
 
   public void Start() {
     for(var k = 0; k < AngelEyes.length; k++)
-      AngelEyes[k].enabled = false
+      AngelEyes[k].enabled = false;
     for(var k = 0; k < headLights.length; k++)
       headLights[k].enabled = false;
     for(var k = 0; k < highBeams.length; k++)
