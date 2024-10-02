@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>
 /// Handling UI dashboard. RPM and KMH gauges.
@@ -24,11 +25,7 @@ public class SCC_Dashboard : MonoBehaviour {
    
 
 
-    public UnityEngine.UI.Text currentGear;
-    void Update() {
-        
-          
-    }
+    public Text currentGear;
 
     //  Needles.
     public RectTransform RPMNeedle;
@@ -55,18 +52,11 @@ public class SCC_Dashboard : MonoBehaviour {
     private void Update() {
 
         //  If there is no target vehicle, return.
-        if (!car) {
-
-            rpm = 0f;
-            kmh = 0f;
-
-        } else {
-
-            rpm = car.currentEngineRPM * RPMNeedleMultiplier;
-            kmh = car.speed * KMHNeedleMultiplier;
-            currentGear.text =(car.currentGear + 1).ToString();
-
-        }
+        if (!car)
+        return;
+        rpm = car.currentEngineRPM * RPMNeedleMultiplier;
+        kmh = car.speed * KMHNeedleMultiplier;
+        currentGear.text = (car.currentGear + 1).ToString();
 
         //  Rotating the needles smoothly.
         Quaternion target = Quaternion.Euler(0f, 0f, orgKMHNeedleAngle - kmh);

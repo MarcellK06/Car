@@ -119,10 +119,11 @@ public class SCC_Drivetrain : MonoBehaviour {
 
         for (int i = 0; i < wheels.Length; i++) {
 
-            if (wheels[i].isTraction)
+            if (wheels[i].isTraction) {
                 averageTractionRPM += Mathf.Abs(wheels[i].wheelCollider.wheelRPMToSpeed);
 
             totalTractionWheels++;
+            }
 
         }
 
