@@ -123,6 +123,8 @@ public class SCC_DrivetrainEditor : Editor {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("highSpeedSteerAngle"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("direction"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gearRatios"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("maximumSpeedPerGear"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("turboExtra"));
 
         if (GUI.changed)
             EditorUtility.SetDirty(driveTrainScript);
