@@ -3867,6 +3867,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   car: {fileID: 993641123263937087}
+  currentGear: {fileID: 706193557}
   RPMNeedle: {fileID: 607372455}
   KMHNeedle: {fileID: 840059234}
   RPMNeedleMultiplier: 1.2
@@ -11357,6 +11358,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1214206853975033444, guid: 6a83b5ed8118dc649b1bab689891db04, type: 3}
+      propertyPath: wheels.Array.data[0].isTraction
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1214206853975033444, guid: 6a83b5ed8118dc649b1bab689891db04, type: 3}
+      propertyPath: wheels.Array.data[1].isTraction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3124700995635492394, guid: 6a83b5ed8118dc649b1bab689891db04, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.0733314
@@ -11413,6 +11422,10 @@ PrefabInstance:
       propertyPath: PlayerCam
       value: 
       objectReference: {fileID: 669334976}
+    - target: {fileID: 8493854539290335689, guid: 6a83b5ed8118dc649b1bab689891db04, type: 3}
+      propertyPath: car
+      value: 
+      objectReference: {fileID: 993641123263937087}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
