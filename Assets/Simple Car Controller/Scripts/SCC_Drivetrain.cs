@@ -74,13 +74,16 @@ public class SCC_Drivetrain : MonoBehaviour {
     public float brakeTorque = 1000f;       //  Maximum brake torque.
     public float maximumSpeed = 100f;       //  Maximum speed.
 
+    public float[] gearRatios;
+    public int currentGear;
+    public float[] maximumSpeedPerGear;
+
     public int direction = 1;       //  Direction. 1 = forward -1 = reverse.
-    public float finalDriveRatio = 3.2f;        //  Final drive ratio.
 
     public float highSpeedSteerAngle = 100f;        //  Vehicle will apply minimal steer angle at this speed.
 
     private float timerForReverse = 0f;     //  Detecting reverse gear.
-    private bool appliedBrake = false;
+    public bool appliedBrake = false;
 
     private void FixedUpdate() {
 
@@ -89,6 +92,7 @@ public class SCC_Drivetrain : MonoBehaviour {
         ApplyTraction();
         ApplyBrake();
         ApplyHandBrake();
+        ChangeGear();
         Others();
 
     }
@@ -97,6 +101,8 @@ public class SCC_Drivetrain : MonoBehaviour {
     /// Engine.
     /// </summary>
     private void Engine() {
+
+        maximumSpeed = gearRatios[currentGear];
 
         //  Getting average rpm of the traction wheels for calculating the engine rpm.
         float averageTractionRPM = 0f;
@@ -112,8 +118,15 @@ public class SCC_Drivetrain : MonoBehaviour {
         }
 
         //  Engine rpm is related to rpms of the traction wheels. Setting current engine rpm to this value smoothly.
-        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, (averageTractionRPM / totalTractionWheels) / maximumSpeed);
+        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, (averageTractionRPM / totalTractionWheels) / maximumSpeed * gearRatio[currentGear]);
 
+    }
+
+    public void ChangeGear() {
+        if (Input.GetKeyDown("GU") && currentGear < gearRatios.length-1)
+            currentGear += 1;
+        if (Input.GetKeyDown("GD") && currentGear > 1)
+            currentGear -= 1;
     }
 
     /// <summary>
@@ -151,7 +164,7 @@ public class SCC_Drivetrain : MonoBehaviour {
         for (int i = 0; i < wheels.Length; i++) {
 
             if (wheels[i].isTraction)
-                wheels[i].wheelCollider.WheelCollider.motorTorque = ((engineTorque * finalDriveRatio) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
+                wheels[i].wheelCollider.WheelCollider.motorTorque = ((engineTorque * gearRatios[currentGear]) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
             else
                 wheels[i].wheelCollider.WheelCollider.motorTorque = 0f;
 
