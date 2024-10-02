@@ -4594,6 +4594,34 @@ PrefabInstance:
       propertyPath: engineTorque
       value: 1500
       objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[0]
+      value: 4.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[1]
+      value: 2.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[2]
+      value: 1.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[3]
+      value: 1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[4]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6429592949104723361, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: gearRatios.Array.data[5]
+      value: 0.83
+      objectReference: {fileID: 0}
     - target: {fileID: 6506595646165637290, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
       propertyPath: Player
       value: 
@@ -4606,6 +4634,22 @@ PrefabInstance:
       propertyPath: PlayerCam
       value: 
       objectReference: {fileID: 669334976}
+    - target: {fileID: 9174996833581199876, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: audioKeys.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174996833581199876, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: audioValues.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174996833581199876, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: audioKeys.Array.data[0]
+      value: engineOn
+      objectReference: {fileID: 0}
+    - target: {fileID: 9174996833581199876, guid: 6a3be3f6e5018434cb9cb922a297212c, type: 3}
+      propertyPath: audioValues.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: a12994710b32cc8419ffe62c8f5237d3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

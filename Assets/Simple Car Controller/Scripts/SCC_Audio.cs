@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles engine audio based on vehicle engine rpm and speed.
@@ -45,7 +46,8 @@ public class SCC_Audio : MonoBehaviour {
 
     }
 
-    //  Audioclips.
+    public string[] audioKeys;
+    public AudioClip[] audioValues;
     public Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
 
     //  Audiosources.
@@ -60,10 +62,11 @@ public class SCC_Audio : MonoBehaviour {
     public float maximumPitch = 1.25f;
 
     private void Start() {
-
-        GameObject engineSource = new GameObject("Engine AudioSource");
+        for(var k = 0; k < audioKeys.Length; k++)
+            audios[audioKeys[k]] = audioValues[k];
+        GameObject engine = new GameObject("Engine AudioSource");
         engine.transform.SetParent(transform, false);
-        engineSource = engineSource.AddComponent<AudioSource>();
+        var engineSource = engine.AddComponent<AudioSource>();
         engineSource.clip = audios["engineOn"];
         engineSource.loop = true;
         engineSource.spatialBlend = 1f;
@@ -82,12 +85,6 @@ public class SCC_Audio : MonoBehaviour {
 
         //  Calculating the target volume depends on the throttle / brake.
         float volume = Drivetrain.direction == 1 ? InputProcessor.inputs.throttleInput : InputProcessor.inputs.brakeInput;
-
-        //  Setting volumes.
-        engineSource.volume = Mathf.Lerp(minimumVolume, maximumVolume, volume);
-
-        //  Setting pitches.
-        engineSource.pitch = Mathf.Lerp(minimumPitch, maximumPitch, Drivetrain.currentEngineRPM / Drivetrain.maximumEngineRPM);
 
     }
 

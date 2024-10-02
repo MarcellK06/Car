@@ -121,14 +121,14 @@ public class SCC_Drivetrain : MonoBehaviour {
         }
 
         //  Engine rpm is related to rpms of the traction wheels. Setting current engine rpm to this value smoothly.
-        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, (averageTractionRPM / totalTractionWheels) / maximumSpeed * gearRatio[currentGear]);
+        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, (averageTractionRPM / totalTractionWheels) / maximumSpeed * gearRatios[currentGear]);
 
     }
 
     public void ChangeGear() {
-        if (Input.GetKeyDown("GU") && currentGear < gearRatios.length-1)
+        if (Input.GetButtonDown("GU") && currentGear < gearRatios.Length-1)
             currentGear += 1;
-        if (Input.GetKeyDown("GD") && currentGear > 1)
+        if (Input.GetButtonDown("GD") && currentGear > 1)
             currentGear -= 1;
     }
 
