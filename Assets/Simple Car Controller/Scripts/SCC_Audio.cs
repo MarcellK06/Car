@@ -46,12 +46,10 @@ public class SCC_Audio : MonoBehaviour {
     }
 
     //  Audioclips.
-    public AudioClip engineOn;
-    public AudioClip engineOff;
+    public Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
 
     //  Audiosources.
-    private AudioSource engineOnSource;
-    private AudioSource engineOffSource;
+    private AudioSource engineSource;
 
     //  Volume values for min and max volume.
     public float minimumVolume = .1f;
@@ -63,23 +61,13 @@ public class SCC_Audio : MonoBehaviour {
 
     private void Start() {
 
-        //  Creating two audiosources for engine on and off clips.
-        GameObject engineOnGO = new GameObject("Engine On AudioSource");
-        engineOnGO.transform.SetParent(transform, false);
-        engineOnSource = engineOnGO.AddComponent<AudioSource>();
-        engineOnSource.clip = engineOn;
-        engineOnSource.loop = true;
-        engineOnSource.spatialBlend = 1f;
-        engineOnSource.Play();
-
-        GameObject engineOffGO = new GameObject("Engine Off AudioSource");
-        engineOffGO.transform.SetParent(transform, false);
-        engineOffSource = engineOffGO.AddComponent<AudioSource>();
-        engineOffSource.clip = engineOff;
-        engineOffSource.loop = true;
-        engineOffSource.spatialBlend = 1f;
-        engineOffSource.Play();
-
+        GameObject engineSource = new GameObject("Engine AudioSource");
+        engine.transform.SetParent(transform, false);
+        engineSource = engineSource.AddComponent<AudioSource>();
+        engineSource.clip = audios["engineOn"];
+        engineSource.loop = true;
+        engineSource.spatialBlend = 1f;
+        engineSource.Play();
     }
 
     private void Update() {
@@ -96,12 +84,10 @@ public class SCC_Audio : MonoBehaviour {
         float volume = Drivetrain.direction == 1 ? InputProcessor.inputs.throttleInput : InputProcessor.inputs.brakeInput;
 
         //  Setting volumes.
-        engineOnSource.volume = Mathf.Lerp(minimumVolume, maximumVolume, volume);
-        engineOffSource.volume = Mathf.Lerp(maximumVolume, 0f, volume);
+        engineSource.volume = Mathf.Lerp(minimumVolume, maximumVolume, volume);
 
         //  Setting pitches.
-        engineOnSource.pitch = Mathf.Lerp(minimumPitch, maximumPitch, Drivetrain.currentEngineRPM / Drivetrain.maximumEngineRPM);
-        engineOffSource.pitch = engineOnSource.pitch;
+        engineSource.pitch = Mathf.Lerp(minimumPitch, maximumPitch, Drivetrain.currentEngineRPM / Drivetrain.maximumEngineRPM);
 
     }
 

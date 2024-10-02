@@ -73,6 +73,9 @@ public class SCC_Drivetrain : MonoBehaviour {
     public float engineTorque = 1000f;      //  Maximum engine torque.
     public float brakeTorque = 1000f;       //  Maximum brake torque.
     public float maximumSpeed = 100f;       //  Maximum speed.
+    
+    public float turboExtra = 0f;
+    public float turboState = 0f;
 
     public float[] gearRatios;
     public int currentGear;
@@ -164,7 +167,7 @@ public class SCC_Drivetrain : MonoBehaviour {
         for (int i = 0; i < wheels.Length; i++) {
 
             if (wheels[i].isTraction)
-                wheels[i].wheelCollider.WheelCollider.motorTorque = ((engineTorque * gearRatios[currentGear]) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
+                wheels[i].wheelCollider.WheelCollider.motorTorque = (((engineTorque + turboState) * gearRatios[currentGear]) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
             else
                 wheels[i].wheelCollider.WheelCollider.motorTorque = 0f;
 
@@ -252,6 +255,7 @@ public class SCC_Drivetrain : MonoBehaviour {
 
         Rigid.centerOfMass = COM.localPosition;     //  Setting center of mass of the rigidbody.
         speed = Rigid.velocity.magnitude * 3.6f;        //  Speed of the vehicle.
+        turboState = currentEngineRPM / maximumEngineRPM * turboExtra;
 
         //  If speed is below 5, and player is still pressing brake, increase timerForReverse value. If this value exceeds the limit, set direction to -1 for reverse gear.
         if (speed <= 5f && InputProcessor.inputs.brakeInput >= .75f)

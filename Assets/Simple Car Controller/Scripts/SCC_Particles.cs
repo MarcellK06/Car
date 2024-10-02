@@ -107,10 +107,12 @@ public class SCC_Particles : MonoBehaviour {
             WheelHit hit;
             wheels[i].WheelCollider.GetGroundHit(out hit);
 
-            if (Mathf.Abs(hit.sidewaysSlip) >= slip || Mathf.Abs(hit.forwardSlip) >= slip)
+            if (Mathf.Abs(hit.sidewaysSlip) >= slip || Mathf.Abs(hit.forwardSlip) >= slip) { // CSÚSZIK
                 wheelEmissions[i].enabled = true;
-            else
+            }
+            else { // NEM CSÚSZIK
                 wheelEmissions[i].enabled = false;
+            }
 
         }
 
