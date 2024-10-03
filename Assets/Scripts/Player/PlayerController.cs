@@ -66,7 +66,6 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(transform.forward * w_s * speed * Time.deltaTime + transform.right * a_d * speed * Time.deltaTime + transform.up * verticalVelocity * Time.deltaTime);
         head.Rotate(transform.right * y * sensitivity * Time.deltaTime + transform.up * x * sensitivity * Time.deltaTime);
-        Debug.Log(transform.right);
         Vector3 headRot = head.localEulerAngles;
         if (headRot.x > 180f) headRot.x -= 360f;
 

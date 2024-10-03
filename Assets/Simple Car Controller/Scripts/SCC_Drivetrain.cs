@@ -101,7 +101,6 @@ public class SCC_Drivetrain : MonoBehaviour {
         ApplyHandBrake();
         ChangeGear();
         Others();
-        Debug.Log($"RPM {currentEngineRPM} | GEAR {currentGear} | SPEED {speed} | TURBO {turboState}");
         }
     }
 
