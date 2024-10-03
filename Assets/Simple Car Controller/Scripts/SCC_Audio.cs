@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Handles engine audio based on vehicle engine rpm and speed.
@@ -45,11 +46,12 @@ public class SCC_Audio : MonoBehaviour {
 
     }
 
-    //  Audioclips.
-    public Dictionary<string, AudioClip> audios = new Dictionary<string, AudioClip>();
-
     //  Audiosources.
-    private AudioSource engineSource;
+    public AudioSource engineStart;
+    public AudioSource engineIdle;
+    public AudioSource engineRunning;
+    public AudioSource engineLimiter;
+    public AudioSource engineOff;
 
     //  Volume values for min and max volume.
     public float minimumVolume = .1f;
@@ -60,34 +62,25 @@ public class SCC_Audio : MonoBehaviour {
     public float maximumPitch = 1.25f;
 
     private void Start() {
-
-        GameObject engineSource = new GameObject("Engine AudioSource");
-        engine.transform.SetParent(transform, false);
-        engineSource = engineSource.AddComponent<AudioSource>();
-        engineSource.clip = audios["engineOn"];
-        engineSource.loop = true;
-        engineSource.spatialBlend = 1f;
-        engineSource.Play();
+        engineIdle.volume = 0;
+        engineRunning.volume = 0;
     }
 
     private void Update() {
 
-        //  If there is no drivetrain attached to the vehicle or input processor, return and disable this component.
         if (!Drivetrain || !InputProcessor) {
 
             enabled = false;
             return;
 
         }
-
-        //  Calculating the target volume depends on the throttle / brake.
-        float volume = Drivetrain.direction == 1 ? InputProcessor.inputs.throttleInput : InputProcessor.inputs.brakeInput;
-
-        //  Setting volumes.
-        engineSource.volume = Mathf.Lerp(minimumVolume, maximumVolume, volume);
-
-        //  Setting pitches.
-        engineSource.pitch = Mathf.Lerp(minimumPitch, maximumPitch, Drivetrain.currentEngineRPM / Drivetrain.maximumEngineRPM);
+        if (drivetrain.speed == 0)
+        engineIdle.volume = Mathf.Lerp(0.1f, 1f, drivetrain.speed);
+        if(drivetrain.speed > 0) {
+            engineIdle.volume = Mathf.Lerp(1f, 0f, drivetrain.speed);
+            engineRunning.volume = Mathf.Lerp(0.2f, 1f, drivetrain.speed);
+            engineRunning.pitch = Mathf.Lerp(engineRunning.pitch, 2f * drivetrain.currentEngineRPM/drivetrain.maximumEngineRPM, Time.deltaTime);
+        }
 
     }
 

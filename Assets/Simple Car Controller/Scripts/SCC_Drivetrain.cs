@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Handling drivetrain, which is most important part of the car controller. 
@@ -78,7 +79,7 @@ public class SCC_Drivetrain : MonoBehaviour {
     public float turboState = 0f;
 
     public float[] gearRatios;
-    public int currentGear;
+    public int currentGear = 0;
     public float[] maximumSpeedPerGear;
 
     public int direction = 1;       //  Direction. 1 = forward -1 = reverse.
@@ -87,9 +88,12 @@ public class SCC_Drivetrain : MonoBehaviour {
 
     private float timerForReverse = 0f;     //  Detecting reverse gear.
     public bool appliedBrake = false;
+        public bool on = false;
 
-    private void FixedUpdate() {
-
+    private void Update() {
+        if (Input.GetButtonDown("EO"))
+            on = !on;
+        if (on) {
         Engine();
         ApplySteering();
         ApplyTraction();
@@ -97,7 +101,8 @@ public class SCC_Drivetrain : MonoBehaviour {
         ApplyHandBrake();
         ChangeGear();
         Others();
-
+        Debug.Log($"RPM {currentEngineRPM} | GEAR {currentGear} | SPEED {speed} | TURBO {turboState}");
+        }
     }
 
     /// <summary>
@@ -105,30 +110,32 @@ public class SCC_Drivetrain : MonoBehaviour {
     /// </summary>
     private void Engine() {
 
-        maximumSpeed = gearRatios[currentGear];
+        maximumSpeed = maximumSpeedPerGear[currentGear];
 
+        turboState = currentEngineRPM > 3000 ? currentEngineRPM / maximumEngineRPM * turboExtra : 0;
         //  Getting average rpm of the traction wheels for calculating the engine rpm.
         float averageTractionRPM = 0f;
         int totalTractionWheels = 0;
 
         for (int i = 0; i < wheels.Length; i++) {
 
-            if (wheels[i].isTraction)
+            if (wheels[i].isTraction) {
                 averageTractionRPM += Mathf.Abs(wheels[i].wheelCollider.wheelRPMToSpeed);
 
             totalTractionWheels++;
+            }
 
         }
 
         //  Engine rpm is related to rpms of the traction wheels. Setting current engine rpm to this value smoothly.
-        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, (averageTractionRPM / totalTractionWheels) / maximumSpeed * gearRatio[currentGear]);
+        currentEngineRPM = Mathf.Lerp(minimumEngineRPM, maximumEngineRPM, averageTractionRPM / totalTractionWheels / maximumSpeed);
 
     }
 
     public void ChangeGear() {
-        if (Input.GetKeyDown("GU") && currentGear < gearRatios.length-1)
+        if (Input.GetButtonDown("GU") && currentGear < gearRatios.Length-1)
             currentGear += 1;
-        if (Input.GetKeyDown("GD") && currentGear > 1)
+        if (Input.GetButtonDown("GD") && currentGear > 0)
             currentGear -= 1;
     }
 
@@ -255,11 +262,10 @@ public class SCC_Drivetrain : MonoBehaviour {
 
         Rigid.centerOfMass = COM.localPosition;     //  Setting center of mass of the rigidbody.
         speed = Rigid.velocity.magnitude * 3.6f;        //  Speed of the vehicle.
-        turboState = currentEngineRPM / maximumEngineRPM * turboExtra;
 
         //  If speed is below 5, and player is still pressing brake, increase timerForReverse value. If this value exceeds the limit, set direction to -1 for reverse gear.
         if (speed <= 5f && InputProcessor.inputs.brakeInput >= .75f)
-            timerForReverse += Time.fixedDeltaTime;
+            timerForReverse += Time.deltaTime;
         else if (speed <= 5f && InputProcessor.inputs.brakeInput <= .25f)
             timerForReverse = 0f;
 
