@@ -25,14 +25,17 @@ public class Tune : MonoBehaviour {
     [SerializeField]
     private int selectedEngine, selectedTurbo, selectedBrakes, selectedTint, selectedDrivetrain;
     private SCC_Drivetrain comp;
+    private PlayerData data;
     private bool inZone = false;
 
     void OnTriggerEnter(Collider obj) {
         var v_obj = obj.gameObject;
         var component = v_obj.GetComponent<SCC_Drivetrain>();
+        var component2 = v_obj.GetComponent<PlayerData>();
         if (component == null)
             return;
         comp = component;
+        data = component2;
         enterButton.SetActive(true);
         inZone = true;
     }
@@ -49,6 +52,10 @@ public class Tune : MonoBehaviour {
     }
 
     void makeChanges() {
+        var n = int.Parse(costText.text.Replace("$", ""));
+        if (!(data.economy.bank >= n))
+            return;
+        data.economy.bank -= n;
         comp.engineTorque = comp.baseEngineTorque * boosts[selectedEngine];
         comp.brakeTorque = comp.baseBrakeTorque * boosts[selectedBrakes];
         comp.turboExtra = comp.baseTurboExtra * boosts[selectedTurbo];

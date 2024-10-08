@@ -12,10 +12,11 @@ public class SpeedCamera : MonoBehaviour {
         if (Physics.Raycast(cameraModule.position, cameraModule.forward, out hit, 30f)) {
 
             var car = hit.transform.GetComponent<SCC_Drivetrain>();
+            Debug.Log($"{car} {hit.transform}");
             if (car.speed <= allowedSpeed || !car || !active)
                 return;
             var player = hit.transform.GetComponent<PlayerData>().economy;
-            player.addbank((car.speed - allowedSpeed) * 10);
+            player.addbank(Mathf.Round((car.speed - allowedSpeed) * 4));
             Debug.Log(player.bank);
             StartCoroutine(setActive());
         }
