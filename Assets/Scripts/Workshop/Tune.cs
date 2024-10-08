@@ -18,7 +18,7 @@ public class Tune : MonoBehaviour {
         var component = v_obj.getComponent<SCC_Drivetrain>();
         if (component == null)
             return;
-        
+        comp = component;
         enterWorkshop(v_obj);
     }
 
