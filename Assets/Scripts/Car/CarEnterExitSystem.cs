@@ -15,6 +15,8 @@ public class NewBehaviourScript : MonoBehaviour
 
     public GameObject DriveUI;
 
+    public GameObject PlayerUI;
+
     bool CanDrive;
     bool driving;
 

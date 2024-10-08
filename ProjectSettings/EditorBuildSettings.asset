@@ -5,7 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Parkolo.unity
     guid: 7fcc2f3dc8be2db438fa3a71dda41fcf
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: d10d0204378bc4241b4732d06a8ed8e9
   m_configObjects: {}

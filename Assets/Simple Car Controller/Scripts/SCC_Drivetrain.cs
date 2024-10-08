@@ -104,7 +104,6 @@ public class SCC_Drivetrain : MonoBehaviour {
         ApplyHandBrake();
         ChangeGear();
         Others();
-        Debug.Log($"RPM {currentEngineRPM} | GEAR {currentGear} | SPEED {speed} | TURBO {turboState}");
         }
     }
     private void Start() {
@@ -182,7 +181,7 @@ public class SCC_Drivetrain : MonoBehaviour {
         for (int i = 0; i < wheels.Length; i++) {
 
             if (wheels[i].isTraction)
-                wheels[i].wheelCollider.WheelCollider.motorTorque = (((engineTorque + turboState) * gearRatios[currentGear]) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
+                wheels[i].wheelCollider.WheelCollider.motorTorque = (inputProcessor.inputs.throttleInput == 0 && inputProcessor.inputs.brakeInput == 0 && (speed > 1 || speed < -1 )) ? (engineTorque * gearRatios[currentGear]/4 * (speed/-speed)) : (((engineTorque + turboState) * gearRatios[currentGear]) * (direction == 1 ? InputProcessor.inputs.throttleInput : -InputProcessor.inputs.brakeInput)) / Mathf.Clamp(totalTractionWheels, 1, 20);
             else
                 wheels[i].wheelCollider.WheelCollider.motorTorque = 0f;
 

@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class PlayerEconomy : MonoBehaviour {
 
-    public int wallet = 0;
-    public int bank = 0;
-    public void addwallet(amount) {
+    public float wallet = 0;
+    public float bank = 0;
+    public void addbank(float amount) {
         bank += amount;
     }
-    public void transaction(amount, type) {
-        if (amount > type == -1 ? bank : wallet)
+    public void transaction(int amount, int type) {
+        if (amount > (type == -1 ? bank : wallet))
             return;
         bank += amount * type;
         wallet += amount * type * -1;
