@@ -72,10 +72,13 @@ public class SCC_Drivetrain : MonoBehaviour {
     public float maximumEngineRPM = 7000f;      //  Maximum engine rpm.
 
     public float engineTorque = 1000f;      //  Maximum engine torque.
+    public float baseEngineTorque;
     public float brakeTorque = 1000f;       //  Maximum brake torque.
+    public float baseBrakeTorque;
     public float maximumSpeed = 100f;       //  Maximum speed.
     
     public float turboExtra = 0f;
+    public float baseTurboExtra;
     public float turboState = 0f;
 
     public float[] gearRatios;
@@ -103,6 +106,11 @@ public class SCC_Drivetrain : MonoBehaviour {
         Others();
         Debug.Log($"RPM {currentEngineRPM} | GEAR {currentGear} | SPEED {speed} | TURBO {turboState}");
         }
+    }
+    private void Start() {
+        baseEngineTorque = engineTorque;
+        baseBrakeTorque = brakeTorque;
+        baseTurboExtra = turboExtra;
     }
 
     /// <summary>

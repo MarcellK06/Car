@@ -58,8 +58,8 @@ public class SCC_Audio : MonoBehaviour {
     public float maximumVolume = 1f;
 
     //  Pitch values for min and max pitch.
-    public float minimumPitch = .75f;
-    public float maximumPitch = 1.25f;
+    public float minimumPitch = .75f * 3.5f;
+    public float maximumPitch = 1.25f * 3.5f;
 
     private void Start() {
         engineIdle.volume = 0;
