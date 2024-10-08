@@ -16,7 +16,7 @@ public class SpeedCamera : MonoBehaviour {
             if (car.speed <= allowedSpeed || !car || !active)
                 return;
             var player = hit.transform.GetComponent<PlayerData>().economy;
-            player.addbank(Mathf.Round((car.speed - allowedSpeed) * 4));
+            player.addbank(Mathf.Round((car.speed - allowedSpeed) * 8));
             Debug.Log(player.bank);
             StartCoroutine(setActive());
         }
