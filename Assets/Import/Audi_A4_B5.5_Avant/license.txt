@@ -1,0 +1,11 @@
+Model Information:
+* title:	Audi A4 B5.5 Avant
+* source:	https://sketchfab.com/3d-models/audi-a4-b55-avant-2f6aea1435bd4ad093146c019c8e0fb6
+* author:	Tomaso (https://sketchfab.com/Tomasoo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Audi A4 B5.5 Avant" (https://sketchfab.com/3d-models/audi-a4-b55-avant-2f6aea1435bd4ad093146c019c8e0fb6) by Tomaso (https://sketchfab.com/Tomasoo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
